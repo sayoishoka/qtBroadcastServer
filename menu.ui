@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Menu</class>
+ <widget class="QWidget" name="Menu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1300</width>
+    <height>850</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>0</y>
+     <width>1151</width>
+     <height>851</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="page"/>
+   <widget class="QWidget" name="page_2"/>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>151</width>
+     <height>851</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTreeWidget" name="treeWidget">
+      <column>
+       <property name="text">
+        <string>音响管理系统</string>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>系统管理</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>用户管理</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>权限管理</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>角色管理</string>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>节目管理</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>音响设备管理</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>设备租用管理</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>租用管理</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>单位管理</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>计费管理</string>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>分组管理</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>文件管理</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>系统日志</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
