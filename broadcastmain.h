@@ -20,10 +20,8 @@ public:
     ~BroadcastMain();
 
     static BroadcastMain* getBroadcastMain(){
-        if (a == nullptr) {
-            a = new BroadcastMain;
-        }
-        return a;
+        static BroadcastMain instance;
+        return &instance;
     };
 
 public:
@@ -42,7 +40,6 @@ private slots:
 private:
     BroadcastMain(QWidget *parent = nullptr);
     void init();
-    static BroadcastMain* a;
     DatabaseConfig *databaseconfig;
     Menu *menu;
 

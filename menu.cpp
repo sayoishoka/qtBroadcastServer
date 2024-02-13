@@ -22,6 +22,8 @@ void Menu::Open_Function(QTreeWidgetItem *item, int column)
     if (QString::localeAwareCompare(item->text(0),"用户管理")==0){
         ui->stackedWidget->addWidget(User_Manage::getUser_Manage());
         ui->stackedWidget->setCurrentIndex(ui->stackedWidget->indexOf(User_Manage::getUser_Manage()));
+    }else if (QString::localeAwareCompare(item->text(0),"主页")==0){
+        ui->stackedWidget->setCurrentIndex(0);
     }
 }
 

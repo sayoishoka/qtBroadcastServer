@@ -6,7 +6,6 @@
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QSqlError>
-BroadcastMain *BroadcastMain::a = nullptr;
 BroadcastMain::BroadcastMain(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::BroadcastMain)
@@ -29,7 +28,7 @@ BroadcastMain::~BroadcastMain()
 
 ///
 /// \brief BroadcastMain::on_register_2_clicked
-///
+/// 注册按钮的响应函数
 void BroadcastMain::on_register_2_clicked()
 {
     qDebug() << "打开注册";
@@ -40,12 +39,16 @@ void BroadcastMain::on_return_2_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
-
+///
+/// \brief BroadcastMain::on_exit_clicked
+///退出按钮的响应函数
 void BroadcastMain::on_exit_clicked()
 {
     qApp->quit();
 }
-
+///
+/// \brief BroadcastMain::on_logon_clicked
+///登录按钮的响应函数
 void BroadcastMain::on_logon_clicked()
 {
 
@@ -78,14 +81,18 @@ void BroadcastMain::on_logon_clicked()
         }
     }
 }
-
+///
+/// \brief BroadcastMain::init
+///登录界面的ui属性设置
 void BroadcastMain::init()
 {
     this->setWindowTitle("登录");
     ui->user_pwd->setPlaceholderText("输入用户密码");
     ui->user_name->setPlaceholderText("输入用户名");
 }
-
+///
+/// \brief BroadcastMain::databaselink
+///数据库的连接配置
 void BroadcastMain::databaselink()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
@@ -98,11 +105,11 @@ void BroadcastMain::databaselink()
         if(settings->contains(tr("/mysql/ip"))&&settings->contains(tr("/mysql/port"))&&settings->contains(tr("/mysql/database"))
                 &&settings->contains(tr("/mysql/username"))&&settings->contains(tr("/mysql/userpassword")))
         {
-            db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
-            db.setPort(settings->value( "/mysql/port").toInt());
-            db.setDatabaseName(settings->value( "/mysql/database").toString());
-            db.setUserName(settings->value( "/mysql/username").toString());
-            db.setPassword(settings->value( "/mysql/userpassword").toString());
+//            db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
+//            db.setPort(settings->value( "/mysql/port").toInt());
+//            db.setDatabaseName(settings->value( "/mysql/database").toString());
+//            db.setUserName(settings->value( "/mysql/username").toString());
+//            db.setPassword(settings->value( "/mysql/userpassword").toString());
         } else {
             settings->beginGroup(tr("mysql"));
             settings->setValue("ip","127.0.0.1");
@@ -111,12 +118,17 @@ void BroadcastMain::databaselink()
             settings->setValue("username","root");
             settings->setValue("userpassword","123456");
             settings->endGroup();
-            db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
-            db.setPort(settings->value( "/mysql/port").toInt());
-            db.setDatabaseName(settings->value( "/mysql/database").toString());
-            db.setUserName(settings->value( "/mysql/username").toString());
-            db.setPassword(settings->value( "/mysql/userpassword").toString());
+//            db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
+//            db.setPort(settings->value( "/mysql/port").toInt());
+//            db.setDatabaseName(settings->value( "/mysql/database").toString());
+//            db.setUserName(settings->value( "/mysql/username").toString());
+//            db.setPassword(settings->value( "/mysql/userpassword").toString());
         }
+        db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
+        db.setPort(settings->value( "/mysql/port").toInt());
+        db.setDatabaseName(settings->value( "/mysql/database").toString());
+        db.setUserName(settings->value( "/mysql/username").toString());
+        db.setPassword(settings->value( "/mysql/userpassword").toString());
         bool DataBaseLinkok = db.open();
         if (DataBaseLinkok){
             qDebug() << "数据库连接成功";
