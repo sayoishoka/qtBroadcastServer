@@ -2,11 +2,13 @@
 #include "ui_menu.h"
 
 #include <QDebug>
+QString Menu::usena = "";
 Menu::Menu(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
+
     init();
     timerr();
     signal_slotConnection();
@@ -17,6 +19,12 @@ Menu::~Menu()
     delete ui;
 }
 
+void Menu::UserName(QString name)
+{
+    Menu::usena = name;
+}
+
+
 void Menu::Open_Function(QTreeWidgetItem *item, int column)
 {
     qDebug() << item->text(0);
@@ -25,6 +33,12 @@ void Menu::Open_Function(QTreeWidgetItem *item, int column)
         ui->stackedWidget->setCurrentIndex(ui->stackedWidget->indexOf(User_Manage::getUser_Manage()));
     }else if (QString::localeAwareCompare(item->text(0),"主页")==0){
         ui->stackedWidget->setCurrentIndex(0);
+    }else if (QString::localeAwareCompare(item->text(0),"角色管理")==0){
+        ui->stackedWidget->addWidget(Role_management::getRole_management());
+        ui->stackedWidget->setCurrentIndex(ui->stackedWidget->indexOf(Role_management::getRole_management()));
+    }else if (QString::localeAwareCompare(item->text(0),"权限管理")==0){
+        ui->stackedWidget->addWidget(Rights_management::getRights_management());
+        ui->stackedWidget->setCurrentIndex(ui->stackedWidget->indexOf(Rights_management::getRights_management()));
     }
 }
 
@@ -36,6 +50,7 @@ void Menu::timerr()
     connect(timer, &QTimer::timeout, [=](){
         QDateTime dateTime2 =QDateTime::currentDateTime();//获取当前系统时间
         ui->time->setText(dateTime2.toString("hh:mm:ss"));
+        pMenuTest1->setTitle(Menu::usena);
     });//连接信号槽
     timer->start(1000);//1s更新一次
 }
@@ -77,6 +92,7 @@ void Menu::init()
                                "QMenuBar::item{widget:80px;font-size:30px;font-family:Microsoft YaHei;color:rgba(0,0,0,1);}"/*设置菜单栏字体为黑色，透明度为1（取值范围0.0-255）*/
                                 );
         pMenuTest1 = new QMenu("用户名");
+
 //        pMenuTest1->setFixedHeight(300);//这样只把菜单变大了
 //        pMenuTest1->setMinimumWidth(150);//指定菜单的宽度
         pMenuTest1->setStyleSheet("QMenu{background:rgba(255,255,255,1);border:none;font-size:16px;}"

@@ -15,15 +15,36 @@ BroadcastMain::BroadcastMain(QWidget *parent)
     ui->setupUi(this);
     init();
     databaselink();
+    userman = User_Manage::getUser_Manage();
     connect(databaseconfig,&DatabaseConfig::Showdbconfig,[=](){
         databaselink();
     });
-
+//    connect(userman,&User_Manage::getdata,[=](){
+//        QSqlQuery query;
+//        query.exec("select * from user");
+//        while(query.next()){
+//            User user;
+//            user.id=query.value(0).toInt();
+//            user.name=query.value(1).toString();
+//            user.accountnumber=query.value(2).toString();
+//            user.password=query.value(3).toString();
+//            user.role=query.value(4).toString();
+//            user.status=query.value(5).toInt();
+//            userdata<<user;
+//        }
+//    });
 }
 
 BroadcastMain::~BroadcastMain()
 {
     delete ui;
+}
+
+QSqlQuery BroadcastMain::getData_Sheet(QString sheet)
+{
+    QSqlQuery query;
+    query.exec("select * from "+sheet);
+    return query;
 }
 
 ///
@@ -75,6 +96,7 @@ void BroadcastMain::on_logon_clicked()
                     QMessageBox::information(this, "提示", "用户名或密码有误");
                 }else{
                     this->hide();
+                    Menu::UserName(query.value(1).toString());
                     menu->show();
                 }
             }
@@ -96,7 +118,7 @@ void BroadcastMain::init()
 void BroadcastMain::databaselink()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    QSettings *settings = new QSettings("D:/qtproject1/BroadcastServer/mysqlprofile.ini", QSettings::IniFormat);
+    QSettings *settings = new QSettings("D:/qtproject1/qtBroadcastServer/mysqlprofile.ini", QSettings::IniFormat);
 //        db.setHostName("127.0.0.1");  //连接本地主机
 //        db.setPort(3306);
 //        db.setDatabaseName("qtserver");
@@ -139,4 +161,32 @@ void BroadcastMain::databaselink()
             databaseconfig = DatabaseConfig::getDatabaseConfig();
             databaseconfig->show();
         }
+}
+///
+/// \brief BroadcastMain::on_register_3_clicked
+///注册账号
+void BroadcastMain::on_register_3_clicked()
+{
+    QString username=ui->newuser_name->text();
+    QString userpsd1=ui->newuser_pwd1->text();
+    QString userpsd2=ui->newuser_pwd2->text();
+    QSqlQuery query;
+    if(QString::localeAwareCompare(username,"")==0||QString::localeAwareCompare(userpsd1,"")==0||QString::localeAwareCompare(userpsd2,"")==0){
+          QMessageBox::information(this, "提示", "用户名或密码为空");
+    }else{
+        query.exec("select * from user where user_accountnumber='" + username +"'");
+        if (query.size()==-1||query.size()==0){
+            if (QString::localeAwareCompare(userpsd1,userpsd2)==0){
+                query.exec("INSERT INTO user (user_name, user_accountnumber, user_password) VALUES ('" + username + "','" +username + "', '" + userpsd1 + "')");
+                QMessageBox::information(this, "提示", "新用户注册成功");
+                ui->stackedWidget->setCurrentIndex(0);
+                ui->user_name->setText("");
+                ui->user_pwd->setText("");
+            }else{
+                QMessageBox::information(this, "提示", "两次密码不一致");
+            }
+        }else{
+            QMessageBox::information(this, "提示", "已存在该用户");
+        }
+    }
 }

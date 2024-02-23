@@ -6,7 +6,7 @@ DatabaseConfig::DatabaseConfig(QWidget *parent) :
     ui(new Ui::DatabaseConfig)
 {
     ui->setupUi(this);
-    settings = new QSettings("D:/qtproject1/BroadcastServer/mysqlprofile.ini", QSettings::IniFormat);
+    settings = new QSettings("D:/qtproject1/qtBroadcastServer/mysqlprofile.ini", QSettings::IniFormat);
     ip=settings->value( "/mysql/ip").toString();
     port=settings->value( "/mysql/port").toInt();
     database=settings->value( "/mysql/database").toString();

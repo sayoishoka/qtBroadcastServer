@@ -2,7 +2,8 @@
 #define MENU_H
 
 #include "user/user_manage.h"
-
+#include "user/role_management.h"
+#include "user/rights_management.h"
 #include <QWidget>
 #include <QTreeWidgetItem>
 #include <QMenuBar>
@@ -19,12 +20,13 @@ class Menu : public QWidget
 public:
     explicit Menu(QWidget *parent = nullptr);
     ~Menu();
-
+    static void UserName(QString name);
 private slots:
     void Open_Function(QTreeWidgetItem *item, int column);
 private:
     void timerr();//定时器
     void init();
+    static QString usena;
     void signal_slotConnection();
     //菜单栏
     QMenuBar *pMenuBar;
@@ -37,7 +39,6 @@ private:
     QAction *pActionTest4;
 
     QList<QAction*> list1;
-    User_Manage *user_mange = new User_Manage();
     Ui::Menu *ui;
 };
 

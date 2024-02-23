@@ -20,16 +20,28 @@ SOURCES += \
     main.cpp \
     broadcastmain.cpp \
     menu.cpp \
+    tcplink.cpp \
+    user/add/adduser.cpp \
+    user/rights_management.cpp \
+    user/role_management.cpp \
     user/user_manage.cpp
 HEADERS += \
     broadcastmain.h \
     databaseconfig.h \
     menu.h \
-    user/user_manage.h
+    tcplink.h \
+    user/add/adduser.h \
+    user/rights_management.h \
+    user/role_management.h \
+    user/user_manage.h \
+    user/userdata.h
 FORMS += \
     broadcastmain.ui \
     databaseconfig.ui \
     menu.ui \
+    user/add/adduser.ui \
+    user/rights_management.ui \
+    user/role_management.ui \
     user/user_manage.ui
 
 # Default rules for deployment.
