@@ -35,7 +35,7 @@ void Role_management::setTable()
 
 void Role_management::update_data()
 {
-    QSqlQuery query = BroadcastMain::getData_Sheet("role");
+    QSqlQuery query = BroadcastMain::getData_Sheet("select * from role");
     int number = query.size();
     int row = 0;
     if (number!=-1||number!=0){

@@ -28,9 +28,9 @@ void TcpLink::JsonAnalysis(QByteArray &buf)
 {
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(buf, &err);
-//    if (err.error != QJsonParseError::NoError){
-//        return;
-//    }
+    if (err.error != QJsonParseError::NoError){
+        return;
+    }
     QJsonObject rootObj = doc.object();
     if (QString::localeAwareCompare(rootObj.value("request").toString(),"login")==0){
         UserLogin(rootObj);

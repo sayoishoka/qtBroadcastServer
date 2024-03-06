@@ -11,6 +11,10 @@ BroadcastMain::BroadcastMain(QWidget *parent)
     , ui(new Ui::BroadcastMain)
 {
     menu = new Menu();
+    tcp = TcpLink::getTcpLink();
+
+
+
     databaseconfig = new DatabaseConfig();
     ui->setupUi(this);
     init();
@@ -43,8 +47,15 @@ BroadcastMain::~BroadcastMain()
 QSqlQuery BroadcastMain::getData_Sheet(QString sheet)
 {
     QSqlQuery query;
-    query.exec("select * from "+sheet);
+    query.exec(sheet);
     return query;
+}
+
+
+void BroadcastMain::exeSql(QString sheet)
+{
+    QSqlQuery query;
+    query.exec(sheet);
 }
 
 ///
@@ -79,7 +90,7 @@ void BroadcastMain::on_logon_clicked()
     if(QString::localeAwareCompare(username,"")==0||QString::localeAwareCompare(userpsd,"")==0){
           QMessageBox::information(this, "提示", "用户名或密码为空");
     }else{
-        query.exec("select * from user where user_accountnumber='" + username +"'");
+        query.exec("select * from user where user_name='" + username +"'");
         qDebug()<<query.size();
         if (query.size()==-1||query.size()==0){
             QMessageBox::information(this, "提示", "用户名或密码有误");
@@ -92,7 +103,7 @@ void BroadcastMain::on_logon_clicked()
                       <<query.value(3).toString().toUtf8().data()
                      <<query.value(4).toString().toUtf8().data()
                     <<query.value(5).toInt();
-                if (QString::localeAwareCompare(userpsd,query.value("user_password").toString())!=0){
+                if (QString::localeAwareCompare(userpsd,query.value("user_pw").toString())!=0){
                     QMessageBox::information(this, "提示", "用户名或密码有误");
                 }else{
                     this->hide();
@@ -102,6 +113,10 @@ void BroadcastMain::on_logon_clicked()
             }
         }
     }
+
+//    QJsonObject obj;
+//    obj.insert("request", "getAllFuncs");
+//    tcp->getAllFuncs(obj);//测试收发请求
 }
 ///
 /// \brief BroadcastMain::init

@@ -7,13 +7,14 @@ User_Manage::User_Manage(QWidget *parent) :
     ui(new Ui::User_Manage)
 {
     ui->setupUi(this);
+    au = AddUser::getAddUser();
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, [=](){
         update_data();
     });//连接信号槽
-    timer->start(5000);//5s更新一次
-    setTable();
+    timer->start(3000);//3s更新一次
     update_data();
+    setTable();
 }
 
 User_Manage::~User_Manage()
@@ -39,14 +40,21 @@ void User_Manage::setTable()
              "QScrollBar::handle:hover{background:gray;}"
              "QScrollBar::sub-line{background:transparent;}"
              "QScrollBar::add-line{background:transparent;}");
+    ui->tableWidget->setStyleSheet("selection-background-color:rgb(34, 170, 75);"); //设置选中行的背景色
+    // 设置选中行
+        int rowToSelect = 0; // 要选中的行的索引
+        QTableWidgetItem* selectedItem = ui->tableWidget->item(rowToSelect, 0);
+        ui->tableWidget->setCurrentItem(selectedItem);
 
 
-
+    QSqlQuery query = BroadcastMain::getData_Sheet("select role_no,role_name from role");
+    int number = query.size();
+    au->getRolenNumber(query);
 }
 
 void User_Manage::update_data()
 {
-    QSqlQuery query = BroadcastMain::getData_Sheet("user");
+    QSqlQuery query = BroadcastMain::getData_Sheet("select * from user");
     int number = query.size();
     int row = 0;
     if (number!=-1||number!=0){
@@ -75,5 +83,40 @@ void User_Manage::update_data()
 //            ui->tableWidget->setItem(number,5, item6);
             row++;
         }
+    }
+}
+
+void User_Manage::on_modify_clicked()
+{
+
+    QList<QTableWidgetItem*> items = ui->tableWidget->selectedItems();
+    int count = items.count();
+    QStringList text;
+    for(int i = 0; i < count; i++)
+   {
+       int row = ui->tableWidget->row(items.at(i));
+       QTableWidgetItem *item = items.at(i);
+       text.append(item->text()); //获取内容
+       qDebug() << item->text();
+   }
+   au->getdata(&text);
+   au->show();
+}
+
+void User_Manage::on_delete_2_clicked()
+{
+    QMessageBox::StandardButton result=QMessageBox::question(this, "提示","是否删除所选中行数据");
+    if (result==QMessageBox::Yes){
+        qDebug() << "确定删除";
+        QList<QTableWidgetItem*> items = ui->tableWidget->selectedItems();
+        int count = items.count();
+        QStringList text;
+        for(int i = 0; i < count; i++)
+        {
+            int row = ui->tableWidget->row(items.at(i));
+            QTableWidgetItem *item = items.at(i);
+            text.append(item->text()); //获取内容
+        }
+        BroadcastMain::exeSql("DELETE FROM user WHERE user_id="+text.at(0));
     }
 }

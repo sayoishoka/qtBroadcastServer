@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "user/userdata.h"
 #include "databaseconfig.h"
+#include "tcplink.h"
 #include <QWidget>
 
 #include <QSqlQuery>
@@ -12,6 +13,7 @@ QT_END_NAMESPACE
 
 class Menu;
 class User_Manage;
+class TcpLink;
 class BroadcastMain : public QWidget
 {
     Q_OBJECT
@@ -29,6 +31,7 @@ public:
 public:
     bool DataBaseLinkok;
     static QSqlQuery getData_Sheet(QString sheet);
+    static void exeSql(QString sheet);
     void databaselink();
 private slots:
     void on_register_2_clicked();
@@ -48,6 +51,7 @@ private:
     DatabaseConfig *databaseconfig;
     Menu *menu;
     User_Manage *userman;
+    TcpLink *tcp;
     Ui::BroadcastMain *ui;
 };
 

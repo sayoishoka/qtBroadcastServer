@@ -50,12 +50,12 @@
    </column>
    <column>
     <property name="text">
-     <string>权限</string>
+     <string>账号状态</string>
     </property>
    </column>
    <column>
     <property name="text">
-     <string>账号状态</string>
+     <string>权限</string>
     </property>
    </column>
    <column>
