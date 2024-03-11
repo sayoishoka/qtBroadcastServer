@@ -27,6 +27,7 @@ public:
         static User_Manage instance;
         return &instance;
     };
+
 signals:
     void getdata();
 private slots:
@@ -39,6 +40,10 @@ private:
     AddUser* au;
     void setTable();
     void update_data();//更新表格数据
+    QJsonObject getUserList(QJsonObject &obj);
+    QJsonObject addUser(QJsonObject &obj);
+    QJsonObject setUserStatus(QJsonObject &obj);
+    QJsonObject resetUserPw(QJsonObject &obj);
     explicit User_Manage(QWidget *parent = nullptr);
     Ui::User_Manage *ui;
 };

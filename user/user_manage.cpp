@@ -15,6 +15,10 @@ User_Manage::User_Manage(QWidget *parent) :
     timer->start(3000);//3s更新一次
     update_data();
     setTable();
+    Dispatcher::getDispatcher()->Register("getUserList",std::bind(&User_Manage::getUserList, this,std::placeholders::_1));
+    Dispatcher::getDispatcher()->Register("addUser",std::bind(&User_Manage::addUser, this,std::placeholders::_1));
+    Dispatcher::getDispatcher()->Register("setUserStatus",std::bind(&User_Manage::setUserStatus, this,std::placeholders::_1));
+    Dispatcher::getDispatcher()->Register("resetUserPw",std::bind(&User_Manage::resetUserPw, this,std::placeholders::_1));
 }
 
 User_Manage::~User_Manage()
@@ -84,6 +88,70 @@ void User_Manage::update_data()
             row++;
         }
     }
+}
+
+QJsonObject User_Manage::getUserList(QJsonObject &obj)
+{
+    QString userName = obj.value("userName").toString();
+    QString roleNo = obj.value("roleNo").toString();
+    QJsonObject requestjson;
+    QJsonArray userList;
+    QJsonObject user;
+    QSqlQuery query = BroadcastMain::getData_Sheet("SELECT user.user_id,user.user_name,user.user_status,user.role_no,role.role_name FROM USER "
+                                                   "LEFT JOIN role ON user.role_no=role.role_no "
+                                                   "WHERE user_name LIKE '%"+userName+"%'");
+    while(query.next()){
+        user = QJsonObject();
+        user.insert("userName",query.value(1).toString());
+        if (query.value(2).toInt()==1){
+            user.insert("userStatus",true);
+        }else{
+            user.insert("userStatus",false);
+        }
+        user.insert("roleNo",query.value(3).toString());
+        user.insert("roleName",query.value(4).toString());
+        userList.append(user);
+    }
+    requestjson.insert("response","reSelectUser");
+    requestjson.insert("userList",userList);
+    return requestjson;
+}
+
+QJsonObject User_Manage::addUser(QJsonObject &obj)
+{
+    QString userName = obj.value("userName").toString();
+    QString roleNo = obj.value("roleNo").toString();
+    QJsonObject requestjson;
+    QSqlQuery query = BroadcastMain::getData_Sheet("INSERT INTO USER (user_name,role_no) VALUES ('"+userName+"','"+roleNo+"')");
+    requestjson.insert("response","reAddUser");
+    requestjson.insert("status",true);
+    return requestjson;
+}
+
+QJsonObject User_Manage::setUserStatus(QJsonObject &obj)
+{
+    QString userName = obj.value("userName").toString();
+    QString userStatus;
+    if (obj.value("userStatus").toBool()){
+        userStatus = "1";
+    }else{
+        userStatus = "0";
+    }
+    QSqlQuery query = BroadcastMain::getData_Sheet("UPDATE USER SET user_status = '"+userStatus+"' WHERE user_name = '"+userName+"'");
+    QJsonObject requestjson;
+    requestjson.insert("response","reSetUserStatus");
+    requestjson.insert("status",true);
+    return requestjson;
+}
+
+QJsonObject User_Manage::resetUserPw(QJsonObject &obj)
+{
+    QString userName = obj.value("userName").toString();
+    QSqlQuery query = BroadcastMain::getData_Sheet("UPDATE USER SET user_pw = 'jit1234' WHERE user_name = '"+userName+"'");
+    QJsonObject requestjson;
+    requestjson.insert("response","reResetUserPw");
+    requestjson.insert("status",true);
+    return requestjson;
 }
 
 void User_Manage::on_modify_clicked()

@@ -6,6 +6,9 @@ TcpLink::TcpLink(QObject *parent) : QObject(parent)
     connect(tcpserver,SIGNAL(newConnection()),this,SLOT(newConnectSlot()));
     tcpserver->listen(QHostAddress::Any,8899);
     socket=new QTcpSocket(this);
+    Dispatcher *dispatch = Dispatcher::getDispatcher();
+    dispatch->Register("login",std::bind(&TcpLink::UserLogin, this,std::placeholders::_1));
+    dispatch->Register("getAllFuncs",std::bind(&TcpLink::getAllFuncs, this,std::placeholders::_1));
 }
 
 void TcpLink::newConnectSlot()
@@ -26,20 +29,36 @@ void TcpLink::readyRead_Slot()
 
 void TcpLink::JsonAnalysis(QByteArray &buf)
 {
+//    QDataStream out();
+//    out.setVersion(QDataStream::Qt_4_1);
+//    QDataStream in(socket);
+//    while(!in.atEnd()) {
+//        QByteArray array;
+//        qint64 size;
+//        in >> size;
+//        in >> array;
+//        QJsonDocument doc = QJsonDocument::fromJson(array);
+//        QJsonObject rootObj = doc.object();
+//        QJsonObject writejs = Dispatcher::getDispatcher()->Dispatch(rootObj.value("request").toString(),rootObj);
+//        WriteData(writejs);
+//    }
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(buf, &err);
-//    if (err.error != QJsonParseError::NoError){
-//        return;
-//    }
-    QJsonObject rootObj = doc.object();
-    if (QString::localeAwareCompare(rootObj.value("request").toString(),"login")==0){
-        UserLogin(rootObj);
-    }else if (QString::localeAwareCompare(rootObj.value("request").toString(),"getAllFuncs")==0){
-        getAllFuncs(rootObj);
+    if (err.error != QJsonParseError::NoError){
+        qDebug()<<"1";
+        return;
     }
+    QJsonObject rootObj = doc.object();
+    QJsonObject writejs = Dispatcher::getDispatcher()->Dispatch(rootObj.value("request").toString(),rootObj);
+    WriteData(writejs);
+//    if (QString::localeAwareCompare(rootObj.value("request").toString(),"login")==0){
+//        UserLogin(rootObj);
+//    }else if (QString::localeAwareCompare(rootObj.value("request").toString(),"getAllFuncs")==0){
+//        getAllFuncs(rootObj);
+//    }
 }
 
-void TcpLink::UserLogin(QJsonObject &Obj)
+QJsonObject TcpLink::UserLogin(QJsonObject &Obj)
 {
     QString username = Obj.value("userName").toString();
     QString userpsd = Obj.value("userPw").toString();
@@ -51,9 +70,10 @@ void TcpLink::UserLogin(QJsonObject &Obj)
         requestjson.insert("response", "reLogin");
         requestjson.insert("status", false);
         requestjson.insert("msg", "用户名有误");
-        requestdoc.setObject(requestjson);
-        requestarray = requestdoc.toJson();
-        socket->write(requestarray);
+        return requestjson;
+//        requestdoc.setObject(requestjson);
+//        requestarray = requestdoc.toJson();
+//        socket->write(requestarray);
     }else{
         while(query.next()){
             qDebug()/*<<query.value("id").toInt()*/
@@ -67,9 +87,10 @@ void TcpLink::UserLogin(QJsonObject &Obj)
                 requestjson.insert("response", "reLogin");
                 requestjson.insert("status", false);
                 requestjson.insert("msg", "密码有误");
-                requestdoc.setObject(requestjson);
-                requestarray = requestdoc.toJson();
-                socket->write(requestarray);
+                return requestjson;
+//                requestdoc.setObject(requestjson);
+//                requestarray = requestdoc.toJson();
+//                socket->write(requestarray);
             }else{
                 QJsonArray funcList;
                 requestjson.insert("response", "reLogin");
@@ -105,19 +126,17 @@ void TcpLink::UserLogin(QJsonObject &Obj)
             }
         }
     }
-    requestdoc.setObject(requestjson);
-    requestarray = requestdoc.toJson();
-    socket->write(requestarray);
     qDebug()<<requestjson;
+//    requestdoc.setObject(requestjson);
+//    requestarray = requestdoc.toJson();
+    return requestjson;
 }
 
-void TcpLink::getAllFuncs(QJsonObject &obj)
+QJsonObject TcpLink::getAllFuncs(QJsonObject &obj)
 {
     QJsonObject requestjson;
     QJsonDocument requestdoc;
     QByteArray requestarray;
-
-
     QJsonObject funNo;
     QJsonArray funcList;
     QJsonArray childNoList;
@@ -125,7 +144,7 @@ void TcpLink::getAllFuncs(QJsonObject &obj)
     QSqlQuery query = BroadcastMain::getData_Sheet("SELECT * FROM FUNCTION");
     int flag=0;
     while(query.next()){
-        qDebug()<<query.value(0)<<query.value(2);
+//        qDebug()<<query.value(0)<<query.value(2);
         if (query.value(0).toInt()==1000||query.value(0).toInt()==2000||query.value(0).toInt()==3000||
                 query.value(0).toInt()==4000||query.value(0).toInt()==5000){
             if (flag!=0){
@@ -146,9 +165,26 @@ void TcpLink::getAllFuncs(QJsonObject &obj)
         }
     }
     requestjson.insert("funcList",funcList);
-    requestdoc.setObject(requestjson);
-    requestarray = requestdoc.toJson();
-    socket->write(requestarray);
+//    requestdoc.setObject(requestjson);
+//    requestarray = requestdoc.toJson();
+//    socket->write(requestarray);
     qDebug()<<"获取所有功能";
     qDebug()<<requestjson;
+    return requestjson;
+}
+
+void TcpLink::WriteData(QJsonObject &obj)
+{
+    QJsonDocument doc;
+    doc.setObject(obj);
+    QByteArray array = doc.toJson();
+    qDebug()<<QString(array);
+    qDebug()<<array.size();
+    QDataStream out(socket);
+    out.setVersion(QDataStream::Qt_4_1);
+    out << (qint64)array.size();
+//    int res = out.writeRawData(array.constData(), array.size());
+//    qDebug() << strlen(array.constData());
+    out << array;
+    socket->flush();
 }

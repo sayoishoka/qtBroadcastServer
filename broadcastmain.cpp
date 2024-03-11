@@ -12,9 +12,6 @@ BroadcastMain::BroadcastMain(QWidget *parent)
 {
     menu = new Menu();
     tcp = TcpLink::getTcpLink();
-
-
-
     databaseconfig = new DatabaseConfig();
     ui->setupUi(this);
     init();
@@ -115,8 +112,10 @@ void BroadcastMain::on_logon_clicked()
     }
 
 //    QJsonObject obj;
-//    obj.insert("request", "getAllFuncs");
-//    tcp->getAllFuncs(obj);//测试收发请求
+//    obj.insert("request", "addUser");
+//    obj.insert("userName", "ams");
+//    obj.insert("roleNo", "1");
+//    QSqlQuery query = User_Manage::getUser_Manage()->addUser(obj);//测试收发请求
 }
 ///
 /// \brief BroadcastMain::init

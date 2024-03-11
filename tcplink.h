@@ -2,6 +2,8 @@
 #define TCPLINK_H
 
 #include "broadcastmain.h"
+#include "dispatcher.h"
+#include <functional>
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -10,6 +12,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QDebug>
+#include <QDataStream>
+
 class TcpLink : public QObject
 {
     Q_OBJECT
@@ -18,8 +22,9 @@ public:
         static TcpLink instance;
         return &instance;
     };
-    void UserLogin(QJsonObject &Obj);
-    void getAllFuncs(QJsonObject &obj);
+    QJsonObject UserLogin(QJsonObject &Obj);
+    QJsonObject getAllFuncs(QJsonObject &obj);
+    void WriteData(QJsonObject &obj);
 signals:
 
 private:

@@ -28,6 +28,7 @@ SOURCES += \
 HEADERS += \
     broadcastmain.h \
     databaseconfig.h \
+    dispatcher.h \
     menu.h \
     tcplink.h \
     user/add/adduser.h \

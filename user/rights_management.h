@@ -2,7 +2,11 @@
 #define RIGHTS_MANAGEMENT_H
 
 #include <QWidget>
-
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <tcplink.h>
+#include <dispatcher.h>
 namespace Ui {
 class Rights_management;
 }
@@ -20,6 +24,9 @@ public:
     ~Rights_management();
 
 private:
+    QJsonObject getRoleFunc(QJsonObject &obj);
+    QJsonObject addPms(QJsonObject &obj);
+    QJsonObject removePms(QJsonObject &obj);
     explicit Rights_management(QWidget *parent = nullptr);
     Ui::Rights_management *ui;
 };

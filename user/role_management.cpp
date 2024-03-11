@@ -13,6 +13,9 @@ Role_management::Role_management(QWidget *parent) :
     });//连接信号槽
     timer->start(5000);//5s更新一次
     update_data();
+    Dispatcher::getDispatcher()->Register("getAllRole",std::bind(&Role_management::getAllRole, this,std::placeholders::_1));
+    Dispatcher::getDispatcher()->Register("addRole",std::bind(&Role_management::addRole, this,std::placeholders::_1));
+    Dispatcher::getDispatcher()->Register("removeRole",std::bind(&Role_management::removeRole, this,std::placeholders::_1));
 }
 
 Role_management::~Role_management()
@@ -53,4 +56,42 @@ void Role_management::update_data()
             row++;
         }
     }
+}
+
+QJsonObject Role_management::getAllRole(QJsonObject &obj)
+{
+    QJsonObject requestjson;
+    QJsonArray roleList;
+    QJsonObject role;
+    requestjson.insert("response","reGetAllRole");
+    QSqlQuery query = BroadcastMain::getData_Sheet("SELECT * FROM role");
+    while(query.next()){
+        role = QJsonObject();
+        role.insert("roleNo",query.value(0).toString());
+        role.insert("roleName",query.value(1).toString());
+        roleList.append(role);
+    }
+    requestjson.insert("roleList",roleList);
+    return requestjson;
+}
+
+QJsonObject Role_management::addRole(QJsonObject &obj)
+{
+    QJsonObject requestjson;
+    QString roleName = obj.value("roleName").toString();
+    QString roleNo = obj.value("roleNo").toString();
+    requestjson.insert("response","reAddRole");
+    QSqlQuery query = BroadcastMain::getData_Sheet("INSERT INTO role (role_no,role_name) VALUES ('"+roleNo+"','"+roleName+"')");
+    requestjson.insert("status",true);
+    return requestjson;
+}
+
+QJsonObject Role_management::removeRole(QJsonObject &obj)
+{
+    QJsonObject requestjson;
+    QString roleNo = obj.value("roleNo").toString();
+    requestjson.insert("response","reRemoveRole");
+    QSqlQuery query = BroadcastMain::getData_Sheet("DELETE FROM role WHERE role_no='"+roleNo+"'");
+    requestjson.insert("status",true);
+    return requestjson;
 }
