@@ -112,10 +112,15 @@ void BroadcastMain::on_logon_clicked()
     }
 
 //    QJsonObject obj;
-//    obj.insert("request", "addUser");
-//    obj.insert("userName", "ams");
-//    obj.insert("roleNo", "1");
-//    QSqlQuery query = User_Manage::getUser_Manage()->addUser(obj);//测试收发请求
+//    obj.insert("request", "setDevsVolume");
+//    obj.insert("volume", 70);
+//    QJsonArray t;
+//    t.append(1);
+//    t.append(2);
+//    obj.insert("devNo", t);
+//    qDebug()<<obj;
+//    QJsonObject ui = Device_Management::getDevice_Management()->setDevsVolume(obj);//测试收发请求
+//    qDebug()<<ui;
 }
 ///
 /// \brief BroadcastMain::init

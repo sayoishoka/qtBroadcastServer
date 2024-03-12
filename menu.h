@@ -4,6 +4,7 @@
 #include "user/user_manage.h"
 #include "user/role_management.h"
 #include "user/rights_management.h"
+#include "device/device_management.h"
 #include <QWidget>
 #include <QTreeWidgetItem>
 #include <QMenuBar>
@@ -23,6 +24,8 @@ public:
     static void UserName(QString name);
 private slots:
     void Open_Function(QTreeWidgetItem *item, int column);
+    void client_state_yes();
+    void client_state_no();
 private:
     void timerr();//定时器
     void init();

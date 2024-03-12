@@ -24,7 +24,7 @@ public:
     };
     ~AddUser();
 private:
-    QMap<int,QString> usermap;
+    QMap<QString,int> usermap;
     void mousePressEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
     QPoint mOffset;//鼠标与左上角的偏移量

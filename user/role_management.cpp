@@ -79,7 +79,7 @@ QJsonObject Role_management::addRole(QJsonObject &obj)
 {
     QJsonObject requestjson;
     QString roleName = obj.value("roleName").toString();
-    QString roleNo = obj.value("roleNo").toString();
+    QString roleNo = QString::number(obj.value("roleNo").toInt());
     requestjson.insert("response","reAddRole");
     QSqlQuery query = BroadcastMain::getData_Sheet("INSERT INTO role (role_no,role_name) VALUES ('"+roleNo+"','"+roleName+"')");
     requestjson.insert("status",true);
@@ -89,7 +89,7 @@ QJsonObject Role_management::addRole(QJsonObject &obj)
 QJsonObject Role_management::removeRole(QJsonObject &obj)
 {
     QJsonObject requestjson;
-    QString roleNo = obj.value("roleNo").toString();
+    QString roleNo = QString::number(obj.value("roleNo").toInt());
     requestjson.insert("response","reRemoveRole");
     QSqlQuery query = BroadcastMain::getData_Sheet("DELETE FROM role WHERE role_no='"+roleNo+"'");
     requestjson.insert("status",true);

@@ -93,7 +93,7 @@ void User_Manage::update_data()
 QJsonObject User_Manage::getUserList(QJsonObject &obj)
 {
     QString userName = obj.value("userName").toString();
-    QString roleNo = obj.value("roleNo").toString();
+    QString roleNo = QString::number(obj.value("roleNo").toInt());
     QJsonObject requestjson;
     QJsonArray userList;
     QJsonObject user;
@@ -120,7 +120,7 @@ QJsonObject User_Manage::getUserList(QJsonObject &obj)
 QJsonObject User_Manage::addUser(QJsonObject &obj)
 {
     QString userName = obj.value("userName").toString();
-    QString roleNo = obj.value("roleNo").toString();
+    QString roleNo = QString::number(obj.value("roleNo").toInt());
     QJsonObject requestjson;
     QSqlQuery query = BroadcastMain::getData_Sheet("INSERT INTO USER (user_name,role_no) VALUES ('"+userName+"','"+roleNo+"')");
     requestjson.insert("response","reAddUser");

@@ -15,7 +15,9 @@ void TcpLink::newConnectSlot()
 {
     socket=tcpserver->nextPendingConnection();//获取已经连接的客户端套接字
     qDebug() << "newConnectSlot执行";
+    emit change_state_yes();
     connect(socket,SIGNAL(readyRead()),this,SLOT(readyRead_Slot()));
+    connect(socket,SIGNAL(disconnected()),this,SLOT(Disconnected_Slot()));
 }
 ///
 /// \brief TcpLink::readyRead_Slot
@@ -25,6 +27,11 @@ void TcpLink::readyRead_Slot()
     QByteArray array = socket->readAll();
     JsonAnalysis(array);
     qDebug()<<array;
+}
+
+void TcpLink::Disconnected_Slot()
+{
+    emit change_state_no();
 }
 
 void TcpLink::JsonAnalysis(QByteArray &buf)
@@ -116,7 +123,7 @@ QJsonObject TcpLink::UserLogin(QJsonObject &Obj)
                             // 清空对象中的内容
                             funNo = QJsonObject();
                         }
-                        funNo.insert("funNo",query2.value(0).toInt());
+                        funNo.insert("funcNo",query2.value(0).toInt());
                         flag++;
                     }else{
                         childNoList.append(query2.value(0).toInt());

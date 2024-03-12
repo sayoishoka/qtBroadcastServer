@@ -18,7 +18,7 @@ Rights_management::~Rights_management()
 
 QJsonObject Rights_management::getRoleFunc(QJsonObject &obj)
 {
-    QString roleno = obj.value("roleNo").toString();
+    QString roleno = QString::number(obj.value("roleNo").toInt());
     QSqlQuery query = BroadcastMain::getData_Sheet("SELECT function.func_no,function.func_name FROM role "
                                                    "LEFT JOIN permission ON role.role_no=permission.role_no "
                                                    "LEFT JOIN FUNCTION ON permission.func_no=function.func_no "
@@ -56,9 +56,9 @@ QJsonObject Rights_management::getRoleFunc(QJsonObject &obj)
 
 QJsonObject Rights_management::addPms(QJsonObject &obj)
 {
-    QString roleNo = obj.value("roleNo").toString();
-    QString funcNo = obj.value("funcNo").toString();
-    QString faNo = obj.value("faNo").toString();
+    QString roleNo = QString::number(obj.value("roleNo").toInt());
+    QString funcNo = QString::number(obj.value("funcNo").toInt());
+    QString faNo = QString::number(obj.value("faNo").toInt());
     QString func;
     QSqlQuery query = BroadcastMain::getData_Sheet("SELECT func_no FROM FUNCTION WHERE func_no = '"+funcNo+"' AND fa_no = '"+faNo+"'");
     while(query.next()){
@@ -73,9 +73,9 @@ QJsonObject Rights_management::addPms(QJsonObject &obj)
 
 QJsonObject Rights_management::removePms(QJsonObject &obj)
 {
-    QString roleNo = obj.value("roleNo").toString();
-    QString funcNo = obj.value("funcNo").toString();
-    QString faNo = obj.value("faNo").toString();
+    QString roleNo = QString::number(obj.value("roleNo").toInt());
+    QString funcNo = QString::number(obj.value("funcNo").toInt());
+    QString faNo = QString::number(obj.value("faNo").toInt());
     QString func;
     QSqlQuery query = BroadcastMain::getData_Sheet("SELECT func_no FROM FUNCTION WHERE func_no = '"+funcNo+"' AND fa_no = '"+faNo+"'");
     while(query.next()){

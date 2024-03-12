@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     databaseconfig.cpp \
+    device/device_management.cpp \
     main.cpp \
     broadcastmain.cpp \
     menu.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
 HEADERS += \
     broadcastmain.h \
     databaseconfig.h \
+    device/device_management.h \
     dispatcher.h \
     menu.h \
     tcplink.h \
@@ -39,6 +41,7 @@ HEADERS += \
 FORMS += \
     broadcastmain.ui \
     databaseconfig.ui \
+    device/device_management.ui \
     menu.ui \
     user/add/adduser.ui \
     user/rights_management.ui \

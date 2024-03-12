@@ -20,7 +20,7 @@ void AddUser::getdata(QStringList *text)
     ui->name->setText(text->at(1));
     ui->account->setText(text->at(2));
     ui->pass->setText(text->at(3));
-    ui->role->setCurrentText(usermap.value(text->at(5).toInt()));
+    ui->role->setCurrentText(usermap.key(text->at(5).toInt()));
     if (text->at(4).toInt()==1){
         ui->status->setCurrentText("正常");
     }else{
@@ -38,7 +38,7 @@ void AddUser::getRolenNumber(QSqlQuery &query)
     usermap.clear();
     ui->role->clear();
     while(query.next()){
-        usermap.insert(query.value(0).toInt(),query.value(1).toString());
+        usermap.insert(query.value(1).toString(),query.value(0).toInt());
         ui->role->addItem(query.value(1).toString());
     }
 }
@@ -72,12 +72,12 @@ void AddUser::on_yes_clicked()
     QString name = ui->name->text();
     QString account = ui->account->text();
     QString pass = ui->pass->text();
-    int role = usermap.key(ui->role->currentText());
-    int status = 0;
-    if (ui->role->currentIndex()==0){
-        status = 1;
+    QString role = QString::number(usermap.value(ui->role->currentText()));
+    QString status = "0";
+    if (ui->status->currentIndex()==0){
+        status = "1";
     }else{
-        status = 0;
+        status = "0";
     }
 //    QSqlQuery idquery;
 //    QSqlQuery namequery;
@@ -88,7 +88,14 @@ void AddUser::on_yes_clicked()
 //    if (idquery.first()||namequery.first()||accquery.first()) {
 //        QMessageBox::information(this, "提示", "检测到有重复数据无法修改");
 //    } else {
-        BroadcastMain::exeSql("UPDATE user SET user_nickname = '"+name+"',user_name = '"+account+"',user_pw = '"+pass+"',role_no = "+role+",user_status = "+status+" WHERE user_id = "+id);
+    qDebug()<<usermap;
+    qDebug()<<id;
+    qDebug()<<name;
+    qDebug()<<account;
+    qDebug()<<pass;
+    qDebug()<<role;
+    qDebug()<<status;
+        BroadcastMain::exeSql("UPDATE USER SET user_nickname = '"+name+"',user_name = '"+account+"',user_pw = '"+pass+"',role_no = '"+role+"',user_status = '"+status+"' WHERE user_id = '"+id+"'");
         this->close();
 //    }
 }

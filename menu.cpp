@@ -39,7 +39,20 @@ void Menu::Open_Function(QTreeWidgetItem *item, int column)
     }else if (QString::localeAwareCompare(item->text(0),"权限管理")==0){
         ui->stackedWidget->addWidget(Rights_management::getRights_management());
         ui->stackedWidget->setCurrentIndex(ui->stackedWidget->indexOf(Rights_management::getRights_management()));
+    }else if (QString::localeAwareCompare(item->text(0),"设备管理")==0){
+        ui->stackedWidget->addWidget(Device_Management::getDevice_Management());
+        ui->stackedWidget->setCurrentIndex(ui->stackedWidget->indexOf(Device_Management::getDevice_Management()));
     }
+}
+
+void Menu::client_state_no()
+{
+    ui->client_status->setText("未连接");
+}
+
+void Menu::client_state_yes()
+{
+    ui->client_status->setText("已连接");
 }
 
 void Menu::timerr()
@@ -57,6 +70,7 @@ void Menu::timerr()
 
 void Menu::init()
 {
+
     ui->treeWidget->setStyleSheet(QString(""
                                                "QWidget{background-color: rgb(227, 222, 214);}"
                                                "QTreeWidget::item{height: 40;}"
@@ -115,4 +129,6 @@ void Menu::init()
 void Menu::signal_slotConnection()
 {
     connect(ui->treeWidget,SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),this,SLOT(Open_Function(QTreeWidgetItem *, int)));
+    connect(TcpLink::getTcpLink(),&TcpLink::change_state_yes,this,&Menu::client_state_yes);
+    connect(TcpLink::getTcpLink(),&TcpLink::change_state_no,this,&Menu::client_state_no);
 }

@@ -26,13 +26,15 @@ public:
     QJsonObject getAllFuncs(QJsonObject &obj);
     void WriteData(QJsonObject &obj);
 signals:
-
+    void change_state_yes();
+    void change_state_no();
 private:
     void JsonAnalysis(QByteArray &buf);
 
 private slots:
     void newConnectSlot();
     void readyRead_Slot();
+    void Disconnected_Slot();
 private:
     QTcpServer *tcpserver;
     QTcpSocket *socket;
