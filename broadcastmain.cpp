@@ -1,7 +1,8 @@
 #include "broadcastmain.h"
+#include "UI/user/user_manage.h"
+#include "function/init.h"
 #include "ui_broadcastmain.h"
-#include "databaseconfig.h"
-
+#include "UI/databaseconfig.h"
 #include <QDebug>
 #include <QSqlQuery>
 #include <QMessageBox>
@@ -11,7 +12,6 @@ BroadcastMain::BroadcastMain(QWidget *parent)
     , ui(new Ui::BroadcastMain)
 {
     menu = new Menu();
-    tcp = TcpLink::getTcpLink();
     databaseconfig = new DatabaseConfig();
     ui->setupUi(this);
     init();
@@ -20,20 +20,13 @@ BroadcastMain::BroadcastMain(QWidget *parent)
     connect(databaseconfig,&DatabaseConfig::Showdbconfig,[=](){
         databaselink();
     });
-//    connect(userman,&User_Manage::getdata,[=](){
-//        QSqlQuery query;
-//        query.exec("select * from user");
-//        while(query.next()){
-//            User user;
-//            user.id=query.value(0).toInt();
-//            user.name=query.value(1).toString();
-//            user.accountnumber=query.value(2).toString();
-//            user.password=query.value(3).toString();
-//            user.role=query.value(4).toString();
-//            user.status=query.value(5).toInt();
-//            userdata<<user;
-//        }
-//    });
+
+    httpserver::getserver()->Listen(8080);
+
+    InitServer *ini = new InitServer("192.168.0.183",8890);
+
+
+
 }
 
 BroadcastMain::~BroadcastMain()
@@ -41,19 +34,6 @@ BroadcastMain::~BroadcastMain()
     delete ui;
 }
 
-QSqlQuery BroadcastMain::getData_Sheet(QString sheet)
-{
-    QSqlQuery query;
-    query.exec(sheet);
-    return query;
-}
-
-
-void BroadcastMain::exeSql(QString sheet)
-{
-    QSqlQuery query;
-    query.exec(sheet);
-}
 
 ///
 /// \brief BroadcastMain::on_register_2_clicked
@@ -111,16 +91,7 @@ void BroadcastMain::on_logon_clicked()
         }
     }
 
-//    QJsonObject obj;
-//    obj.insert("request", "setDevsVolume");
-//    obj.insert("volume", 70);
-//    QJsonArray t;
-//    t.append(1);
-//    t.append(2);
-//    obj.insert("devNo", t);
-//    qDebug()<<obj;
-//    QJsonObject ui = Device_Management::getDevice_Management()->setDevsVolume(obj);//测试收发请求
-//    qDebug()<<ui;
+
 }
 ///
 /// \brief BroadcastMain::init
@@ -146,11 +117,7 @@ void BroadcastMain::databaselink()
         if(settings->contains(tr("/mysql/ip"))&&settings->contains(tr("/mysql/port"))&&settings->contains(tr("/mysql/database"))
                 &&settings->contains(tr("/mysql/username"))&&settings->contains(tr("/mysql/userpassword")))
         {
-//            db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
-//            db.setPort(settings->value( "/mysql/port").toInt());
-//            db.setDatabaseName(settings->value( "/mysql/database").toString());
-//            db.setUserName(settings->value( "/mysql/username").toString());
-//            db.setPassword(settings->value( "/mysql/userpassword").toString());
+
         } else {
             settings->beginGroup(tr("mysql"));
             settings->setValue("ip","127.0.0.1");
@@ -159,11 +126,7 @@ void BroadcastMain::databaselink()
             settings->setValue("username","root");
             settings->setValue("userpassword","123456");
             settings->endGroup();
-//            db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
-//            db.setPort(settings->value( "/mysql/port").toInt());
-//            db.setDatabaseName(settings->value( "/mysql/database").toString());
-//            db.setUserName(settings->value( "/mysql/username").toString());
-//            db.setPassword(settings->value( "/mysql/userpassword").toString());
+
         }
         db.setHostName(settings->value( "/mysql/ip").toString());  //连接本地主机
         db.setPort(settings->value( "/mysql/port").toInt());

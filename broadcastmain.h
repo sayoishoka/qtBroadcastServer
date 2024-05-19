@@ -1,10 +1,12 @@
 #ifndef BROADCASTMAIN_H
 #define BROADCASTMAIN_H
-#include "menu.h"
-#include "user/userdata.h"
-#include "databaseconfig.h"
-#include "tcplink.h"
+#include "UI/menu.h"
+#include "UI/user/userdata.h"
+#include "UI/databaseconfig.h"
+#include "connect/tcp_ip/tcplink.h"
 #include <QWidget>
+#include<connect/http/httpserver.h>
+#include<connect/http/httpsession.h>
 
 #include <QSqlQuery>
 QT_BEGIN_NAMESPACE
@@ -19,7 +21,7 @@ class BroadcastMain : public QWidget
     Q_OBJECT
 
 public:
-    QList<User> userdata;
+
 
     ~BroadcastMain();
 
@@ -30,8 +32,7 @@ public:
 
 public:
     bool DataBaseLinkok;
-    static QSqlQuery getData_Sheet(QString sheet);
-    static void exeSql(QString sheet);
+
     void databaselink();
 private slots:
     void on_register_2_clicked();
@@ -51,7 +52,6 @@ private:
     DatabaseConfig *databaseconfig;
     Menu *menu;
     User_Manage *userman;
-    TcpLink *tcp;
     Ui::BroadcastMain *ui;
 };
 
